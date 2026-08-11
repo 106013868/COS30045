@@ -1,0 +1,49 @@
+* {
+	font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+	margin: 0;
+	width: auto;
+	height: auto;
+}
+
+nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: dimgray;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+}
+
+main {
+	margin: 20px;
+}
+
+ul {
+	display: flex;
+	list-style: none;
+	gap: 2rem;
+}
+
+li a {
+	color: lightgrey;
+	text-decoration: none;
+	font-size: 1rem;
+	font-weight: 500;
+	transition: color 0.3s ease;
+}
+
+li a:hover,
+li a.active {
+	color: white;
+}
+
+
+footer {
+	position: absolute;
+	bottom: 0;
+	justify-self: center;
+}
