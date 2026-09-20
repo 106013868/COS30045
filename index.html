@@ -1,95 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>COS30045</title>
-	<script src="https://d3js.org/d3.v7.min.js"></script>
-
-	<link rel="stylesheet" href="styles/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COS30045</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="scripts/scatter.js"></script>
+    <link rel="stylesheet" href="styles/style.css">
 </head>
-
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="pages/a.html">A</a></li>
+                <li><a href="pages/b.html">B</a></li>
+                <li><a href="pages/c.html">C</a></li>
+                <li><a href="pages/d.html">D</a></li>
+            </ul>
+        </nav>
+    </header>
 
-	<header>
-		<nav>
-			<ul>
-				<li><a href="pages/a.html">A</a></li>
-				<li><a href="pages/b.html">B</a></li>
-				<li><a href="pages/c.html">C</a></li>
-				<li><a href="pages/d.html">D</a></li>
-			</ul>
-		</nav>
-	</header>
+    <main>
+        <section>
+            <h1>COS30045 Data Visualisation</h1>
+            <h2>How does healthcare spending relate to life expectancy across OECD countries, and where does Australia sit?</h2>
+            <p>
+                Each dot is a country. Healthcare spending per person is shown on the
+                horizontal axis and life expectancy at birth on the vertical axis.
+                Australia is highlighted. Hover over a dot to see its exact values.
+            </p>
+        </section>
 
-	<main>
-		<section>
-			<h1>COS30045 Data Visualisation</h1>
-		</section>
+        <div id="chart"></div>
 
-		<div id="chart"></div>
-		
-	</main>
+        <section>
+            <p>
+                Source: OECD Health Statistics. Health expenditure and financing;
+                Life expectancy at birth.
+            </p>
+        </section>
+    </main>
 
-	<footer>
-		<p>Footer</p>
-	</footer>
+    <footer>
+        <p>Footer</p>
+    </footer>
 
-
-
-
-	<script>
-		const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-		const width = 500 - margin.left - margin.right;
-		const height = 400 - margin.top - margin.bottom;
-
-		const svg = d3.select("#chart")
-			.append("svg")
-				.attr("width", width + margin.left + margin.right)
-				.attr("height", height + margin.top + margin.bottom)
-			.append("g")
-				.attr("transform", `translate(${margin.left},${margin.top})`);
-
-		d3.csv("data/dummy.csv").then(data => {
-			data.forEach(d => {
-				d.Number = +d.Number;
-			});
-
-			const x = d3.scaleBand()
-				.range([0, width])
-				.domain(data.map(d => d.Month))
-				.padding(0.2);
-
-			svg.append("g")
-				.attr("transform", `translate(0,${height})`)
-				.call(d3.axisBottom(x))
-				.selectAll("text")
-					.attr("transform", "translate(-10,0)rotate(-45)")
-					.style("text-anchor", "end");
-
-			const y = d3.scaleLinear()
-				.domain([0, d3.max(data, d => d.Number) * 1.1])
-				.range([height, 0]);
-
-			svg.append("g")
-				.call(d3.axisLeft(y));
-
-			svg.selectAll(".bar")
-				.data(data)
-				.enter()
-				.append("rect")
-					.attr("class", "bar")
-					.attr("x", d => x(d.Month))
-					.attr("y", d => y(d.Number))
-					.attr("width", x.bandwidth())
-					.attr("height", d => height - y(d.Number));
-
-		}).catch(error => {
-			console.error("Error loading the CSV file:", error);
-		});
-	</script>
-
+    <script>
+        scatterPlot();
+    </script>
 </body>
-
 </html>
