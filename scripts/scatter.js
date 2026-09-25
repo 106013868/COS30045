@@ -18,10 +18,7 @@ function scatterPlot() {
             lifeExpectancy: +d.life_expectancy
         };
     }).then(function(data) {
-        // keep one year so each country appears once
-        dataset = data.filter(function(d) {
-            return d.year === year;
-        });
+        dataset = data;
 
         drawChart(dataset);
     });
@@ -56,72 +53,6 @@ function scatterPlot() {
             .attr("width", w)
             .attr("height", h);
 
-        // one circle per country, Australia drawn larger and in a different colour
-        svg.selectAll("circle")
-            .data(dataset)
-            .enter()
-            .append("circle")
-            .attr("cx", function(d) {
-                return xScale(d.spending);
-            })
-            .attr("cy", function(d) {
-                return yScale(d.lifeExpectancy);
-            })
-            .attr("r", function(d) {
-                if (d.code === "AUS") {
-                    return 7;
-                } else {
-                    return 5;
-                }
-            })
-            .attr("fill", pointColour)
-            .on("mouseover", function(event, d) {
-                let xPosition = parseFloat(d3.select(this).attr("cx"));
-                let yPosition = parseFloat(d3.select(this).attr("cy")) - 15;
-
-                svg.append("text")
-                    .attr("id", "tooltip")
-                    .attr("x", xPosition)
-                    .attr("y", yPosition)
-                    .attr("text-anchor", "middle")
-                    .attr("font-size", "12px")
-                    .attr("font-weight", "bold")
-                    .text(d.country + ": $" + d.spending + ", " + d.lifeExpectancy + " years");
-
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .attr("fill", "orange");
-            })
-            .on("mouseout", function() {
-                d3.select("#tooltip").remove();
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .attr("fill", pointColour);
-            });
-
-        // label Australia so users can find it without hovering
-        svg.selectAll("text.label")
-            .data(dataset.filter(function(d) {
-                return d.code === "AUS";
-            }))
-            .enter()
-            .append("text")
-            .attr("class", "label")
-            .text(function(d) {
-                return d.country;
-            })
-            .attr("x", function(d) {
-                return xScale(d.spending) + 12;
-            })
-            .attr("y", function(d) {
-                return yScale(d.lifeExpectancy) + 4;
-            })
-            .attr("fill", "orangered")
-            .attr("font-size", "12px")
-            .attr("font-weight", "bold");
-
         svg.append("g")
             .attr("transform", "translate(0," + (h - padding) + ")")
             .call(xAxis);
@@ -136,7 +67,7 @@ function scatterPlot() {
             .attr("y", h - 15)
             .attr("text-anchor", "middle")
             .attr("font-size", "13px")
-            .text("Healthcare spending per person (USD PPP, " + year + ")");
+            .text("Healthcare spending per person (USD PPP)");
 
         svg.append("text")
             .attr("transform", "rotate(-90)")
@@ -145,6 +76,116 @@ function scatterPlot() {
             .attr("text-anchor", "middle")
             .attr("font-size", "13px")
             .text("Life expectancy at birth (years)");
+
+        function updateChart(year) {
+            let yearData = dataset.filter(function(d) {
+                return d.year === year;
+            });
+
+            // key by country code so each circle stays with the same country across years
+            let circles = svg.selectAll("circle")
+                .data(yearData, function(d) {
+                    return d.code;
+                });
+
+            // remove countries with no data for this year
+            circles.exit().remove();
+
+            let circlesEnter = circles.enter()
+                .append("circle")
+                .attr("r", function(d) {
+                    if (d.code === "AUS") {
+                        return 7;
+                    } else {
+                        return 5;
+                    }
+                })
+                .attr("fill", pointColour)
+                .attr("cx", function(d) {
+                    return xScale(d.spending);
+                })
+                .attr("cy", function(d) {
+                    return yScale(d.lifeExpectancy)
+                })
+                .on("mouseover", function(event, d) {
+                    let xPosition = parseFloat(d3.select(this).attr("cx"));
+                    let yPosition = parseFloat(d3.select(this).attr("cy")) - 15;
+
+                    svg.append("text")
+                        .attr("id", "tooltip")
+                        .attr("x", xPosition)
+                        .attr("y", yPosition)
+                        .attr("text-anchor", "middle")
+                        .attr("font-size", "12px")
+                        .attr("font-weight", "bold")
+                        .text(d.country + ": $" + d.spending + ", " + d.lifeExpectancy + " years");
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr("fill", "orange");
+                })
+                .on("mouseout", function() {
+                    d3.select("#tooltip").remove();
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr("fill", pointColour);
+                });
+            circlesEnter.merge(circles)
+                .transition()
+                .duration(500)
+                .attr("cx", function(d) {
+                    return xScale(d.spending);
+                })
+                .attr("cy", function(d) {
+                    return yScale(d.lifeExpectancy);
+            });
+
+            let label = svg.selectAll("text.label")
+                .data(yearData.filter(function(d) {
+                    return d.code === "AUS";
+                }));
+
+            label.enter()
+                .append("text")
+                .attr("class", "label")
+                .text(function(d) {
+                    return d.country;
+                })
+                .attr("fill", "orangered")
+                .attr("font-size", "12px")
+                .attr("font-weight", "bold")
+                .attr("x", function(d) {
+                    return xScale(d.spending) + 12;
+                })
+                .attr("y", function(d) {
+                    return yScale(d.lifeExpectancy) + 4;
+                })
+                .merge(label)
+                .transition()
+                .duration(500)
+                .attr("x", function(d) {
+                    return xScale(d.spending) + 12;
+                })
+                .attr("y", function(d) {
+                    return yScale(d.lifeExpectancy) + 4;
+            })
+        }
+
+        updateChart(year);
+
+        d3.select("#controls")
+            .style("margin-left", padding + "px")
+
+        // slider changes the year shown
+        d3.select("#yearSlider")
+            .style("display", "block")
+            .style("width", (w - padding * 2) + "px")
+            .on("input", function() {
+                year = +this.value;
+                d3.select("#yearLabel").text(year);
+                updateChart(year);
+            });
     }
 
     // used when drawing circles and when restoring colour after a hover

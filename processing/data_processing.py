@@ -13,7 +13,7 @@ import os
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(BASE, "data", "raw")
 OUT = os.path.join(BASE, "data", "health_data.csv")
-START_YEAR = 2000
+START_YEAR = 2011
 END_YEAR = 2022
 
 
