@@ -79,6 +79,41 @@ function scatterPlot() {
             .text("Life expectancy at birth (years)");
 
 
+        // average lines, added before the circles so they sit behind them
+        // they start on the axes and slide to the averages on first load
+        let avgX = svg.append("line")
+            .attr("class", "avg")
+            .attr("x1", padding)
+            .attr("x2", padding)
+            .attr("y1", padding)
+            .attr("y2", h - padding)
+            .attr("stroke", "grey")
+            .attr("stroke-dasharray", "4 4");
+
+        let avgY = svg.append("line")
+            .attr("class", "avg")
+            .attr("x1", padding)
+            .attr("x2", w - padding)
+            .attr("y1", h - padding)
+            .attr("y2", h - padding)
+            .attr("stroke", "grey")
+            .attr("stroke-dasharray", "4 4");
+
+        let avgXLabel = svg.append("text")
+            .attr("class", "avg")
+            .attr("x", padding)
+            .attr("y", padding - 8)
+            .attr("font-size", "11px")
+            .attr("fill", "grey");
+
+        let avgYLabel = svg.append("text")
+            .attr("class", "avg")
+            .attr("x", w - padding)
+            .attr("y", h - padding)
+            .attr("text-anchor", "end")
+            .attr("font-size", "11px")
+            .attr("fill", "grey");
+        
         function selectedRegions() {
             let regions = [];
 
@@ -97,6 +132,41 @@ function scatterPlot() {
             let yearData = dataset.filter(function(d) {
                 return d.year === year && regions.includes(d.region);
             });
+
+            // averages of the countries currently shown
+            let meanSpending = d3.mean(yearData, function(d) {
+                return d.spending;
+            });
+
+            let meanLife = d3.mean(yearData, function(d) {
+                return d.lifeExpectancy;
+            });
+
+            // hide the averages if every region is unticked
+            svg.selectAll(".avg")
+                .style("display", yearData.length > 0 ? null : "none");
+
+            if (yearData.length > 0) {
+                avgX.transition()
+                    .duration(500)
+                    .attr("x1", xScale(meanSpending))
+                    .attr("x2", xScale(meanSpending));
+
+                avgY.transition()
+                    .duration(500)
+                    .attr("y1", yScale(meanLife))
+                    .attr("y2", yScale(meanLife));
+
+                avgXLabel.text("Average: $" + Math.round(meanSpending).toLocaleString())
+                    .transition()
+                    .duration(500)
+                    .attr("x", xScale(meanSpending) + 5);
+
+                avgYLabel.text("Average: " + meanLife.toFixed(1) + " years")
+                    .transition()
+                    .duration(500)
+                    .attr("y", yScale(meanLife) - 5);
+            }
 
             // key by country code so each circle stays with the same country across years
             let circles = svg.selectAll("circle")
@@ -124,24 +194,28 @@ function scatterPlot() {
                     return yScale(d.lifeExpectancy)
                 })
                 .on("mouseover", function(event, d) {
-                    let xPosition = parseFloat(d3.select(this).attr("cx"));
-                    let yPosition = parseFloat(d3.select(this).attr("cy")) - 15;
+                    // fill the tooltip with this country's values and show it
+                    d3.select("#tooltip")
+                        .style("display", "block")
+                        .html("<strong>" + d.country + "</strong><br>" +
+                            d.region + "<br>" +
+                            "Spending: $" + d.spending.toLocaleString() + "<br>" +
+                            "Life expectancy: " + d.lifeExpectancy + " years");
 
-                    svg.append("text")
-                        .attr("id", "tooltip")
-                        .attr("x", xPosition)
-                        .attr("y", yPosition)
-                        .attr("text-anchor", "middle")
-                        .attr("font-size", "12px")
-                        .attr("font-weight", "bold")
-                        .text(d.country + ": $" + d.spending + ", " + d.lifeExpectancy + " years");
+                    // bring the hovered dot in front of any it overlaps
+                    d3.select(this).raise();
                     d3.select(this)
                         .transition()
                         .duration(200)
                         .attr("fill", "orange");
                 })
+                .on("mousemove", function(event) {
+                    d3.select("#tooltip")
+                        .style("left", (event.pageX + 12) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
                 .on("mouseout", function() {
-                    d3.select("#tooltip").remove();
+                    d3.select("#tooltip").style("display", "none");
                     d3.select(this)
                         .transition()
                         .duration(200)
