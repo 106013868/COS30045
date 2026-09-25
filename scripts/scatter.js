@@ -13,6 +13,7 @@ function scatterPlot() {
         return {
             country: d.country,
             code: d.code,
+            region: d.region,
             year: +d.year,
             spending: +d.spending,
             lifeExpectancy: +d.life_expectancy
@@ -77,9 +78,24 @@ function scatterPlot() {
             .attr("font-size", "13px")
             .text("Life expectancy at birth (years)");
 
+
+        function selectedRegions() {
+            let regions = [];
+
+            d3.selectAll(".regionBox").each(function() {
+                if (this.checked) {
+                    regions.push(this.value);
+                }
+            });
+
+            return regions;
+        }
+
         function updateChart(year) {
+            let regions = selectedRegions();
+
             let yearData = dataset.filter(function(d) {
-                return d.year === year;
+                return d.year === year && regions.includes(d.region);
             });
 
             // key by country code so each circle stays with the same country across years
@@ -145,6 +161,8 @@ function scatterPlot() {
                 .data(yearData.filter(function(d) {
                     return d.code === "AUS";
                 }));
+            
+            label.exit().remove();
 
             label.enter()
                 .append("text")
@@ -184,6 +202,11 @@ function scatterPlot() {
             .on("input", function() {
                 year = +this.value;
                 d3.select("#yearLabel").text(year);
+                updateChart(year);
+            });
+
+        d3.selectAll(".regionBox")
+            .on("change", function() {
                 updateChart(year);
             });
     }

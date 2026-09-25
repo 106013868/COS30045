@@ -47,3 +47,15 @@ footer {
 	bottom: 0;
 	justify-self: center;
 }
+
+/* chart and region filter side by side */
+#visArea {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+#regionFilter label {
+    display: block;
+    margin-bottom: 6px;
+}
