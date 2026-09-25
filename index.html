@@ -4,26 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COS30045</title>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="scripts/scatter.js"></script>
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="pages/a.html">A</a></li>
-                <li><a href="pages/b.html">B</a></li>
-                <li><a href="pages/c.html">C</a></li>
-                <li><a href="pages/d.html">D</a></li>
-            </ul>
-        </nav>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="index.html">COS30045</a>
+            <nav>
+                <ul>
+                    <li><a href="pages/a.html">A</a></li>
+                    <li><a href="pages/b.html">B</a></li>
+                    <li><a href="pages/c.html">C</a></li>
+                    <li><a href="pages/d.html">D</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
+    <section class="hero">
+        <div class="hero-dots" aria-hidden="true">
+            <svg viewBox="0 0 400 300">
+                <circle cx="40" cy="230" r="5" class="dot dot-blue"></circle>
+                <circle cx="90" cy="190" r="6" class="dot dot-blue"></circle>
+                <circle cx="70" cy="120" r="4" class="dot dot-blue"></circle>
+                <circle cx="140" cy="160" r="7" class="dot dot-blue"></circle>
+                <circle cx="180" cy="95" r="5" class="dot dot-blue"></circle>
+                <circle cx="230" cy="140" r="4" class="dot dot-blue"></circle>
+                <circle cx="250" cy="70" r="6" class="dot dot-blue"></circle>
+                <circle cx="300" cy="110" r="5" class="dot dot-blue"></circle>
+                <circle cx="330" cy="60" r="7" class="dot dot-blue"></circle>
+                <circle cx="360" cy="40" r="5" class="dot dot-blue"></circle>
+                <circle cx="120" cy="60" r="4" class="dot dot-blue"></circle>
+                <circle cx="290" cy="200" r="9" class="dot dot-red"></circle>
+            </svg>
+        </div>
+        <div class="hero-inner">
+            <p class="hero-pretitle">Data Visualisation, COS30045</p>
+            <h1>How does healthcare spending relate to life expectancy across OECD countries, and where does Australia sit?</h1>
+            <p class="hero-sub">
+                Subtitle but IDK what to put here.
+            </p>
+        </div>
+    </section>
+
     <main>
-        <section>
-            <h1>COS30045 Data Visualisation</h1>
-            <h2>How does healthcare spending relate to life expectancy across OECD countries, and where does Australia sit?</h2>
+        <section class="intro">
             <p>
                 Each dot is a country. Healthcare spending per person is shown on the
                 horizontal axis and life expectancy at birth on the vertical axis.
@@ -31,39 +59,41 @@
             </p>
         </section>
 
-        <div id="visArea">
-            <div id="chart"></div>
+        <section class="vis-panel">
+            <div id="visArea">
+                <div id="chart"></div>
 
-            <div id="regionFilter">
-                <h3>Regions</h3>
-                <label><input type="checkbox" class="regionBox" value="Western Europe" checked> Western Europe</label>
-                <label><input type="checkbox" class="regionBox" value="Central and Eastern Europe" checked> Central and Eastern Europe</label>
-                <label><input type="checkbox" class="regionBox" value="Americas" checked> Americas</label>
-                <label><input type="checkbox" class="regionBox" value="Asia-Pacific" checked> Asia-Pacific</label>
-                <label><input type="checkbox" class="regionBox" value="Middle East and Africa" checked> Middle East and Africa</label>
+                <div id="regionFilter">
+                    <h3>Regions</h3>
+                    <label><input type="checkbox" class="regionBox" value="Western Europe" checked> Western Europe</label>
+                    <label><input type="checkbox" class="regionBox" value="Central and Eastern Europe" checked> Central and Eastern Europe</label>
+                    <label><input type="checkbox" class="regionBox" value="Americas" checked> Americas</label>
+                    <label><input type="checkbox" class="regionBox" value="Asia-Pacific" checked> Asia-Pacific</label>
+                    <label><input type="checkbox" class="regionBox" value="Middle East and Africa" checked> Middle East and Africa</label>
+                </div>
             </div>
-        </div>
 
-        <div id="controls">
-            <label for="yearSlider">Year: <span id="yearLabel">2022</span></label>
-            <input type="range" id="yearSlider" min="2011" max="2022" value="2022" step="1" list="yearTicks">
-            <datalist id="yearTicks">
-                <option value="2011"></option>
-                <option value="2012"></option>
-                <option value="2013"></option>
-                <option value="2014"></option>
-                <option value="2015"></option>
-                <option value="2016"></option>
-                <option value="2017"></option>
-                <option value="2018"></option>
-                <option value="2019"></option>
-                <option value="2020"></option>
-                <option value="2021"></option>
-                <option value="2022"></option>
-            </datalist>
-        </div>
+            <div id="controls">
+                <label for="yearSlider">Year: <span id="yearLabel">2022</span></label>
+                <input type="range" id="yearSlider" min="2011" max="2022" value="2022" step="1" list="yearTicks">
+                <datalist id="yearTicks">
+                    <option value="2011"></option>
+                    <option value="2012"></option>
+                    <option value="2013"></option>
+                    <option value="2014"></option>
+                    <option value="2015"></option>
+                    <option value="2016"></option>
+                    <option value="2017"></option>
+                    <option value="2018"></option>
+                    <option value="2019"></option>
+                    <option value="2020"></option>
+                    <option value="2021"></option>
+                    <option value="2022"></option>
+                </datalist>
+            </div>
+        </section>
 
-        <section>
+        <section class="sources">
             <p>
                 Source: OECD Health Statistics. Health expenditure and financing;
                 Life expectancy at birth.
@@ -71,8 +101,8 @@
         </section>
     </main>
 
-    <footer>
-        <p>Footer</p>
+    <footer class="site-footer">
+        <p>COS30045 Data Visualisation</p>
     </footer>
 
     <script>
