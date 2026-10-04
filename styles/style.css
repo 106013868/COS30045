@@ -200,6 +200,7 @@ main {
 
 #controls {
 	max-width: var(--content-wide);
+	min-width: 0;
 	margin: 0;
 	padding: 1.125rem 1.75rem;
 	background: var(--panel);
@@ -222,6 +223,10 @@ main {
 
 #yearSlider {
 	accent-color: var(--blue);
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
 }
 
 .sources {
