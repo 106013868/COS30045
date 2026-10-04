@@ -709,13 +709,11 @@ function scatterPlot() {
 
         updateChart(year);
 
-        d3.select("#controls")
-            .style("margin-left", padding + "px")
-
         // slider changes the year shown
         d3.select("#yearSlider")
             .style("display", "block")
             .style("width", (w - padding * 2) + "px")
+            .style("margin-left", padding + "px")
             .on("input", function() {
                 year = +this.value;
                 d3.select("#yearLabel").text(year);
