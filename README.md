@@ -43,7 +43,7 @@ Original export: `OECD_ELS_HD_DSD_HEALTH_STAT_DF_LE_1_0_filtered_2026-09-20_04-4
 
 ## Data processing
 
-`processing/prepare_data.py` produces `data/health_data.csv` from the raw exports. It:
+`processing/data_processing.py` produces `data/health_data.csv` from the raw exports. It:
 
 1. Keeps only the country code, country name, year and value from each export
 2. Joins the two datasets on country code and year using an inner join, so only records with both values are kept
@@ -57,7 +57,7 @@ To regenerate it:
 
 ```
 pip install pandas
-python processing/prepare_data.py
+python processing/data_processing.py
 ```
 
 ## Built with
