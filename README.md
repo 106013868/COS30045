@@ -26,8 +26,7 @@ data/
   raw/                  Raw OECD exports
   health_data.csv       Processed data loaded by the chart
 processing/
-  prepare_data.py       Merges and cleans the raw exports
-  requirements.txt      Python dependencies
+  data_processing.py    Merges and cleans the raw exports
 ```
 
 ## Data
